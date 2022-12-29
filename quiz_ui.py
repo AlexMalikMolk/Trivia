@@ -49,7 +49,7 @@ class QuizInterface:
 
         # Title
         title = Label(self.window, text="Alex Frågesport",
-                      width=50, bg="green", fg="white", font=("ariel", 20, "bold"))
+                      width=50, bg="blue", fg="yellow", font=("ariel", 20, "bold"))
 
         # place of the title
         title.place(x=0, y=2)
@@ -131,14 +131,14 @@ class QuizInterface:
 
         # The first button is the Next button to move to the
         # next Question
-        next_button = Button(self.window, text="Next", command=self.next_btn,
+        next_button = Button(self.window, text="Nästa", command=self.next_btn,
                              width=10, bg="green", fg="white", font=("ariel", 16, "bold"))
 
         # palcing the button on the screen
         next_button.place(x=350, y=460)
 
         # This is the second button which is used to Quit the self.window
-        quit_button = Button(self.window, text="Quit", command=self.window.destroy,
+        quit_button = Button(self.window, text="Stäng", command=self.window.destroy,
                              width=5, bg="red", fg="white", font=("ariel", 16, " bold"))
 
         # placing the Quit button on the screen
@@ -152,7 +152,7 @@ class QuizInterface:
         wrong = f"Fel: {wrong}"
 
         # calculates the percentage of correct answers
-        result = f"Poäng: {score_percent}%"
+        result = f"Procent rätt: {score_percent}%"
 
         # Shows a message box to display the result
         messagebox.showinfo("Resultat", f"{result}\n{correct}\n{wrong}")
