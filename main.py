@@ -4,6 +4,7 @@ from quiz_brain import QuizBrain
 from quiz_ui import QuizInterface
 from random import shuffle
 import html
+import timer
 
 question_bank = []
 for question in question_data:

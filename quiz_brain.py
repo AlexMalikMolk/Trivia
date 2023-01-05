@@ -30,8 +30,16 @@ class QuizBrain:
             return False
 
     def get_score(self):
-        #Get the number of correct answers, wrong answers, and score percentage.
-        
+        # Get the number of correct answers, wrong answers, and score percentage.
+
         wrong = self.question_no - self.score
-        score_percent = int(self.score / self.question_no * 100)
-        return (self.score, wrong, score_percent)
+        # Add 100 points for each correct answer
+        total_score = self.score * 100
+        score_percent = int(total_score / self.question_no * 100)
+        return (total_score, wrong, score_percent)
+
+    #save the score and name to scores.py
+    def save_score(self, name):
+        with open("scores.py", "a") as file:
+            file.write(f"{name}: {self.get_score()[0]}")
+
