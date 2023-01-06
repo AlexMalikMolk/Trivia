@@ -14,7 +14,7 @@ class QuizInterface:
         self.window = Tk()
         self.window.title("Alex Frågesport")
         self.window.geometry("850x530")
-        self.highscore = Highscore()
+        self.highscore = ()
 
         # Display Title
         self.display_title()
@@ -42,7 +42,7 @@ class QuizInterface:
         self.feedback = Label(self.window, pady=10, font=("arial", 15, "bold"))
         self.feedback.place(x=300, y=380)
 
-        # Next and Quit Button
+        # Next, Quit and Score Button
         self.buttons()
 
         # Mainloop
@@ -152,10 +152,15 @@ class QuizInterface:
         # placing the Quit button on the screen
         quit_button.place(x=700, y=50)
 
-        # score button
-        highscore_button = Button(self.window, text="Score", command=Highscore, width=5, bg="red", fg="white",
+        # Display the score
+        highscore_button = Button(self.window, text="Score", command=self.score_btn, width=5, bg="red", fg="white",
                                   font=("arial", 16, " bold"))
+        # Place button
         highscore_button.place(x=700, y=100)
+
+    def score_btn(self):
+        # if clicked on score button, then run Highscore class
+        self.highscore = Highscore()
 
     def display_result(self):
         # Display the result
