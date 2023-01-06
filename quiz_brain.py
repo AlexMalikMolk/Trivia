@@ -7,21 +7,21 @@ class QuizBrain:
         self.current_question = None
 
     def has_more_questions(self):
-        #To check if the quiz has more questions
-        
+        # To check if the quiz has more questions
+
         return self.question_no < len(self.questions)
 
     def next_question(self):
-        #Get the next question by incrementing the question number
-        
+        # Get the next question by incrementing the question number
+
         self.current_question = self.questions[self.question_no]
         self.question_no += 1
         q_text = self.current_question.question_text
         return f"Q.{self.question_no}: {q_text}"
 
     def check_answer(self, user_answer):
-        #Check the user's answer against the correct answer and maintain the score
-        
+        # Check the user's answer against the correct answer and maintain the score
+
         correct_answer = self.current_question.correct_answer
         if user_answer.lower() == correct_answer.lower():
             self.score += 1
@@ -30,16 +30,8 @@ class QuizBrain:
             return False
 
     def get_score(self):
-        # Get the number of correct answers, wrong answers, and score percentage.
+        # Get the number of correct answers, wrong answers, and score.
 
         wrong = self.question_no - self.score
-        # Add 100 points for each correct answer
-        total_score = self.score * 100
-        score_percent = int(total_score / self.question_no * 100)
-        return (total_score, wrong, score_percent)
-
-    #save the score and name to scores.py
-    def save_score(self, name):
-        with open("scores.py", "a") as file:
-            file.write(f"{name}: {self.get_score()[0]}")
-
+        score_points = int(self.score / self.question_no * 1000)
+        return (self.score, wrong, score_points)

@@ -1,5 +1,7 @@
-from tkinter import Tk, Canvas, StringVar, Label, Radiobutton, Button, messagebox, Entry
+from tkinter import Tk, Canvas, StringVar, Label, Radiobutton, Button, messagebox
+from tkinter.simpledialog import askstring
 from quiz_brain import QuizBrain
+from score import Highscore
 
 THEME_COLOR = "#375362"
 
@@ -7,10 +9,12 @@ THEME_COLOR = "#375362"
 class QuizInterface:
 
     def __init__(self, quiz_brain: QuizBrain) -> None:
+        self.name = askstring("Ditt namn", "Vad heter du?:")
         self.quiz = quiz_brain
         self.window = Tk()
         self.window.title("Alex Frågesport")
         self.window.geometry("850x530")
+        self.highscore = Highscore()
 
         # Display Title
         self.display_title()
@@ -37,12 +41,6 @@ class QuizInterface:
         # To show whether the answer is right or wrong
         self.feedback = Label(self.window, pady=10, font=("arial", 15, "bold"))
         self.feedback.place(x=300, y=380)
-
-        # Entry field for user to input their name
-        self.name_entry = Entry(self.window, font=("arial", 14))
-        self.name_entry.place(x=250, y=70)
-        self.name_label = Label(self.window, text="Enter your name:", font=("arial", 14))
-        self.name_label.place(x=70, y=70)
 
         # Next and Quit Button
         self.buttons()
@@ -93,7 +91,7 @@ class QuizInterface:
         return choice_list
 
     def display_options(self):
-        """To display four options"""
+        # Display options
 
         val = 0
 
@@ -107,46 +105,34 @@ class QuizInterface:
             self.opts[val]['value'] = option
             val += 1
 
-    def name_entry(self):
-        # get the name of the user
-        name = self.name_entry.get()
-        self.name_entry.delete(0, 'end')
-        return name
-
     def next_btn(self):
 
         # Check if the answer is correct
         if self.quiz.check_answer(self.user_answer.get()):
             self.feedback["fg"] = "green"
-            self.feedback["text"] = 'Rätt svar! \U0001F44D'
-            # add 100 points for each correct answer
-            self.quiz.score += 100
+            self.feedback["text"] = 'Rätt! \U0001F44D'
         else:
             self.feedback['fg'] = 'red'
-            self.feedback['text'] = ('\u274E Oops! \n'
-                                     f'Det rätta svaret är: {self.quiz.current_question.correct_answer}')
+            self.feedback['text'] = ('\u274E Fel! \n'
+                                     f'Rätt svar är: {self.quiz.current_question.correct_answer}')
 
         if self.quiz.has_more_questions():
             # Moves to next to display next question and its options
             self.display_question()
             self.display_options()
         else:
-            # save the name and score of the user to score.py
-            name = self.name_entry()
-            score = self.quiz.score
-            with open("score.py", "a") as f:
-                f.write(f"{name},{score}\n")
+
+            # save the name and score of the user to score.txt delimited by a comma
+            with open("score.txt", "a") as f:
+                f.write('Namn:' f"{self.name},'Högsta poäng:' {self.quiz.score} \n")
 
             # if no more questions, then it displays the score
             self.display_result()
-
-            # destroys the self.window
+            # load the score.txt
+            # destroy the window
             self.window.destroy()
 
-    def highscore_button(self):
-        with open("score.py", "r") as f:
-            highscores = f.read()
-        messagebox.showinfo("Highscores", highscores)
+    # shows data from score.py
 
     def buttons(self):
         # define buttons
@@ -167,26 +153,20 @@ class QuizInterface:
         quit_button.place(x=700, y=50)
 
         # score button
-        highscore_button = Button(self.window, text="Score", command=self.window.destroy,
-                                  width=5, bg="red", fg="white", font=("arial", 16, " bold"))
+        highscore_button = Button(self.window, text="Score", command=Highscore, width=5, bg="red", fg="white",
+                                  font=("arial", 16, " bold"))
         highscore_button.place(x=700, y=100)
 
-        # name entry
-        #self.name_entry = Entry(self.window, width=20, font=("arial", 16, " bold"))
-        #self.name_entry.place(x=350, y=400)
-
     def display_result(self):
-        """To display the result using messagebox"""
-        correct, wrong, score_percent = self.quiz.get_score()
+        # Display the result
+        correct, wrong, score_points = self.quiz.get_score()
 
         correct = f"Rätt: {correct}"
         wrong = f"Fel: {wrong}"
 
-        # calculates the percentage
+        # shows the points scored by the user
 
-        score = f"Poäng: {score_percent}%"
-
-        result = f"Procent rätt: {score_percent}%"
+        result = f"Poäng: {score_points}"
 
         # Shows a message box to display the result
         messagebox.showinfo("Resultat", f"{result}\n{correct}\n{wrong}")
