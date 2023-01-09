@@ -1,6 +1,7 @@
 class QuizBrain:
 
     def __init__(self, questions):
+        self.score_points = None
         self.question_no = 0
         self.score = 0
         self.questions = questions
@@ -34,4 +35,4 @@ class QuizBrain:
 
         wrong = self.question_no - self.score
         score_points = int(self.score / self.question_no * 1000)
-        return (self.score, wrong, score_points)
+        return self.score, wrong, score_points

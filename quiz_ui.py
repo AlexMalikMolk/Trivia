@@ -157,9 +157,9 @@ class QuizInterface:
             self.countdown(self.count)
 
         else:
-            # save the name and score of the user to score.txt delimited by a comma
-            with open("score.txt", "a") as f:
-                f.write('Namn:' f"{self.name},'Högsta poäng:' {self.quiz.score} \n")
+            # save the name and score_points of the user to score.txt delimited by a comma
+            with open('score.txt', 'a') as file:
+                file.write(f'{self.name},{self.quiz.score_points}\n')
 
             # if no more questions, then it displays the score
             self.display_result()
