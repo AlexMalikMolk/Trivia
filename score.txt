@@ -1,1 +1,3 @@
 Name: Alex, Score: 40
+Name: Alex, Score: 40
+Name: Alex, Score: 20
