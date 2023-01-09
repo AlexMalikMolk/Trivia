@@ -71,12 +71,15 @@ class QuizInterface:
             self.window.after(1000, self.countdown, count)
         else:
 
-            # Popup showing to try again and restart the quiz
-            messagebox.showinfo("Försök igen!", "Tryck på OK för att starta om programmet")
-            # destroy the window
-            self.window.destroy()
-            # run the program again
-            self.__init__(self.quiz)
+            # Popup showing to try again and restart the quiz, Ok button to restart the quiz cancel to quit
+            try_again = messagebox.askokcancel("Tiden är ute!", "Försök igen?")
+            if try_again:
+                # run the program again
+                import subprocess
+                subprocess.run(["python", "main.py"])
+            else:
+                # quit the program
+                self.window.destroy()
 
     def display_title(self):
 
@@ -166,6 +169,16 @@ class QuizInterface:
 
             # destroy the window
             self.window.destroy()
+
+            # ask the user if he/she wants to play again
+            play_again = messagebox.askyesno("Spela igen?", "Vill du spela igen?")
+            if play_again:
+                # run the program again
+                import subprocess
+                subprocess.run(["python", "main.py"])
+            else:
+                # quit the program
+                self.window.destroy()
 
     def buttons(self):
         # define buttons
