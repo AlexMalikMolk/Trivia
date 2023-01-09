@@ -1,7 +1,7 @@
 class QuizBrain:
 
     def __init__(self, questions):
-        self.score_points = None
+        self.score_points = 0
         self.question_no = 0
         self.score = 0
         self.questions = questions
