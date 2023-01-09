@@ -35,6 +35,7 @@ class Highscore:
 
             # Create a label to display the score
             score_label = Label(self.window, text=score, justify='right')
+
             # placing the label in the window
             score_label.place(x=600, y=y)
 

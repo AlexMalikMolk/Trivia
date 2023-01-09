@@ -10,14 +10,14 @@ class QuizInterface:
 
     def __init__(self, quiz_brain: QuizBrain) -> None:
         self.name = askstring("Ditt namn", "Vad heter du?:")
-
         self.quiz = quiz_brain
+
         self.window = Tk()
         self.window.title("Alex Frågesport")
         self.window.geometry("850x530")
         self.highscore = ()
         # Initialize the countdown timer
-        self.count = 30
+        self.count = 60
 
         # Display Title
         self.display_title()
@@ -70,15 +70,16 @@ class QuizInterface:
         if count > 0:
             self.window.after(1000, self.countdown, count)
         else:
-
-            # Popup showing to try again and restart the quiz, Ok button to restart the quiz cancel to quit
-            try_again = messagebox.askokcancel("Tiden är ute!", "Försök igen?")
-            if try_again:
-                # run the program again
+            # Ok button to restart the quiz cancel to quit
+            answer = messagebox.askokcancel("Tiden är ute", "Tiden är ute, vill du spela igen?")
+            if answer:
+                # Destroy the current window and start the quiz again
+                self.window.destroy()
                 import subprocess
                 subprocess.run(["python", "main.py"])
+
             else:
-                # quit the program
+                # Quit the program
                 self.window.destroy()
 
     def display_title(self):
@@ -152,17 +153,12 @@ class QuizInterface:
             # Moves to next to display next question and its options
             self.display_question()
 
+            # Reset the timer to 60 seconds
+            self.countdown(60)
+
             self.display_options()
 
-            # Reset the timer to 30 and start the timer again
-            self.count = 30
-            self.timer_label.config(text="")
-            self.countdown(self.count)
-
         else:
-            # save the name and score_points of the user to score.txt delimited by a comma
-            with open('score.txt', 'a') as file:
-                file.write(f'{self.name},{self.quiz.score_points}\n')
 
             # if no more questions, then it displays the score
             self.display_result()
@@ -221,3 +217,9 @@ class QuizInterface:
 
         # Shows a message box to display the result
         messagebox.showinfo("Resultat", f"{result}\n{correct}\n{wrong}")
+
+        # save and append the name and score to the file
+        with open("score.txt", "a") as file:
+            file.write(f"Name: {self.name}, Score: {self.quiz.score_points}\n")
+
+            file.close()
