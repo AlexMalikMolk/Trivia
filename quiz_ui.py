@@ -10,11 +10,14 @@ class QuizInterface:
 
     def __init__(self, quiz_brain: QuizBrain) -> None:
         self.name = askstring("Ditt namn", "Vad heter du?:")
+
         self.quiz = quiz_brain
         self.window = Tk()
         self.window.title("Alex Frågesport")
         self.window.geometry("850x530")
         self.highscore = ()
+        # Initialize the countdown timer
+        self.count = 30
 
         # Display Title
         self.display_title()
@@ -31,6 +34,12 @@ class QuizInterface:
         self.canvas.grid(row=2, column=0, columnspan=2, pady=50)
         self.display_question()
 
+        # Create a timer label
+        self.timer_label = Label(self.window, text="", fg='black', font=('Helvetica', 24))
+
+        # place the timer label
+        self.timer_label.place(x=700, y=400)
+
         # Declare a StringVar to store user's answer
         self.user_answer = StringVar()
 
@@ -45,11 +54,31 @@ class QuizInterface:
         # Next, Quit and Score Button
         self.buttons()
 
+        # start the timer and show it in the timer label
+        self.countdown(self.count)
+
         # Mainloop
         self.window.mainloop()
 
+    def countdown(self, count):
+        # Update the label with the count
+        self.timer_label.config(text=str(count))
+
+        # Decrement the count
+        count -= 1
+        # If the count is greater than 0, call the function countdown and start the timer again from 30
+        if count > 0:
+            self.window.after(1000, self.countdown, count)
+        else:
+
+            # Popup showing to try again and restart the quiz
+            messagebox.showinfo("Försök igen!", "Tryck på OK för att starta om programmet")
+            # destroy the window
+            self.window.destroy()
+            # run the program again
+            self.__init__(self.quiz)
+
     def display_title(self):
-        """To display title"""
 
         # Title
         title = Label(self.window, text="Alex Frågesport",
@@ -106,7 +135,6 @@ class QuizInterface:
             val += 1
 
     def next_btn(self):
-
         # Check if the answer is correct
         if self.quiz.check_answer(self.user_answer.get()):
             self.feedback["fg"] = "green"
@@ -117,22 +145,27 @@ class QuizInterface:
                                      f'Rätt svar är: {self.quiz.current_question.correct_answer}')
 
         if self.quiz.has_more_questions():
+
             # Moves to next to display next question and its options
             self.display_question()
-            self.display_options()
-        else:
 
+            self.display_options()
+
+            # Reset the timer to 30 and start the timer again
+            self.count = 30
+            self.timer_label.config(text="")
+            self.countdown(self.count)
+
+        else:
             # save the name and score of the user to score.txt delimited by a comma
             with open("score.txt", "a") as f:
                 f.write('Namn:' f"{self.name},'Högsta poäng:' {self.quiz.score} \n")
 
             # if no more questions, then it displays the score
             self.display_result()
-            # load the score.txt
+
             # destroy the window
             self.window.destroy()
-
-    # shows data from score.py
 
     def buttons(self):
         # define buttons
@@ -153,7 +186,7 @@ class QuizInterface:
         quit_button.place(x=700, y=50)
 
         # Display the score
-        highscore_button = Button(self.window, text="Score", command=self.score_btn, width=5, bg="red", fg="white",
+        highscore_button = Button(self.window, text="Poäng", command=self.score_btn, width=5, bg="red", fg="white",
                                   font=("arial", 16, " bold"))
         # Place button
         highscore_button.place(x=700, y=100)

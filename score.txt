@@ -1,1 +1,5 @@
 Namn:Barje,'Högsta poäng:' 2 
+Namn:dsad,'Högsta poäng:' 0 
+Namn:dsa,'Högsta poäng:' 2 
+Namn:Alex,'Högsta poäng:' 3 
+Namn:Alex,'Högsta poäng:' 1 
